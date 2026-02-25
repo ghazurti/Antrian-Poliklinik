@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontrol Panggilan Poli</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --accent: #0ea5e9;
+            --text: #1e293b;
+            --text-soft: #64748b;
+            --border: #e2e8f0;
+            --success: #22c55e;
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        select,
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        .patient-list {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .patient-list th {
+            text-align: left;
+            padding: 0.75rem;
+            border-bottom: 2px solid var(--border);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--text-soft);
+        }
+
+        .patient-list td {
+            padding: 1rem 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .btn-panggil {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-panggil:hover {
+            background: #0284c7;
+        }
+
+        .btn-panggil:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-menunggu {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .badge-dipanggil {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-soft);
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Kontrol Panggilan Poli</h1>
+        <p style="color: var(--text-soft); font-size: 0.9rem;">Pilih poliklinik dan panggil pasien sesuai urutan.</p>
+    </header>
+
+    <div class="card">
+        <div class="form-group">
+            <label for="poli-select">Pilih Poliklinik</label>
+            <select id="poli-select">
+                <option value="">-- Pilih Poli --</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h2 style="font-size: 1.1rem;">Daftar Pasien Hari Ini</h2>
+            <button class="btn" style="background: var(--border); font-size: 0.8rem;" id="btn-refresh">🔄
+                Refresh</button>
+        </div>
+
+        <div id="loading" class="hidden loading">Memuat pasien...</div>
+
+        <table class="patient-list">
+            <thead>
+                <tr>
+                    <th>No. Reg</th>
+                    <th>Nama Pasien</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="patient-body">
+                <tr>
+                    <td colspan="4" style="text-align: center; color: var(--text-soft); padding: 2rem;">Pilih poliklinik
+                        terlebih dahulu</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="/static/control.js"></script>
+</body>
+
+</html>

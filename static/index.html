@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Antrian Poli – Display TV</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+
+<body>
+
+  <!-- ═══ HEADER ═══════════════════════════════════════════════════ -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo-wrap">
+        <img src="/static/logo.png" alt="Logo" class="logo-image">
+        <div>
+          <div class="logo-title">ANTRIAN POLI</div>
+          <div class="logo-sub">Rumah Sakit / Klinik</div>
+        </div>
+      </div>
+    </div>
+    <div class="header-center">
+      <div class="header-date" id="tanggal">—</div>
+    </div>
+    <div class="header-right">
+      <div class="clock-wrap">
+        <div class="clock" id="jam">00:00:00</div>
+        <div class="clock-label">WIB</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══ MAIN ══════════════════════════════════════════════════════ -->
+  <main class="main-grid">
+
+    <!-- Panel Kiri: SEDANG DIPANGGIL -->
+    <section class="panel panel-called">
+      <div class="panel-header">
+        <span class="panel-icon">📢</span>
+        <span>SEDANG DIPANGGIL</span>
+      </div>
+      <div class="called-list" id="called-list">
+        <!-- Populated by app.js -->
+        <div class="empty-state">Memuat data…</div>
+      </div>
+    </section>
+
+    <!-- Panel Kanan: JADWAL DOKTER -->
+    <section class="panel panel-schedule">
+      <div class="panel-header">
+        <span class="panel-icon">📅</span>
+        <span>JADWAL DOKTER HARI INI</span>
+      </div>
+      <div class="schedule-table-wrap">
+        <table class="waiting-table">
+          <thead>
+            <tr>
+              <th>Dokter</th>
+              <th>Poliklinik</th>
+              <th>Jam Praktek</th>
+            </tr>
+          </thead>
+          <tbody id="schedule-list">
+            <tr>
+              <td colspan="3" class="empty-state">Memuat jadwal…</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══ TICKER BAR ════════════════════════════════════════════════ -->
+  <footer class="ticker-bar">
+    <div class="ticker-label">INFO</div>
+    <div class="ticker-track">
+      <div class="ticker-content" id="ticker-text">
+        Selamat datang di layanan antrian poli. Harap mempersiapkan kartu identitas dan kartu pasien Anda. Terima kasih
+        telah bersabar.
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- Overlay Panggilan Besar (Ala Loket) -->
+  <div id="call-overlay" class="hidden">
+    <div class="call-box">
+      <div class="call-title">PANGGILAN ANTRIAN</div>
+      <div class="call-number" id="overlay-number">A-001</div>
+      <div class="call-name" id="overlay-name">NAMA PASIEN</div>
+      <div class="call-poli" id="overlay-poli">NAMA POLIKLINIK</div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+
+</html>
