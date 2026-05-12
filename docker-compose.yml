@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: antri-poli-app
+    restart: always
+    network_mode: host
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - PORT=3030
+      - DEMO_MODE=${DEMO_MODE}
+      - RUST_LOG=info
+    env_file:
+      - .env

@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Antrian Poli – Display TV</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/static/style.css" />
 </head>
-
 <body>
 
   <!-- ═══ HEADER ═══════════════════════════════════════════════════ -->
@@ -21,6 +19,7 @@
           <div class="logo-title">ANTRIAN POLI</div>
           <div class="logo-sub">Rumah Sakit / Klinik</div>
         </div>
+        <span class="live-dot">LIVE</span>
       </div>
     </div>
     <div class="header-center">
@@ -41,10 +40,10 @@
     <section class="panel panel-called">
       <div class="panel-header">
         <span class="panel-icon">📢</span>
-        <span>SEDANG DIPANGGIL</span>
+        <span>Sedang Dipanggil</span>
+        <span class="panel-count" id="called-count">0</span>
       </div>
       <div class="called-list" id="called-list">
-        <!-- Populated by app.js -->
         <div class="empty-state">Memuat data…</div>
       </div>
     </section>
@@ -52,8 +51,8 @@
     <!-- Panel Kanan: JADWAL DOKTER -->
     <section class="panel panel-schedule">
       <div class="panel-header">
-        <span class="panel-icon">📅</span>
-        <span>JADWAL DOKTER HARI INI</span>
+        <span class="panel-icon">🩺</span>
+        <span>Jadwal Dokter Hari Ini</span>
       </div>
       <div class="schedule-table-wrap">
         <table class="waiting-table">
@@ -65,9 +64,7 @@
             </tr>
           </thead>
           <tbody id="schedule-list">
-            <tr>
-              <td colspan="3" class="empty-state">Memuat jadwal…</td>
-            </tr>
+            <tr><td colspan="3" class="empty-state">Memuat jadwal…</td></tr>
           </tbody>
         </table>
       </div>
@@ -80,24 +77,23 @@
     <div class="ticker-label">INFO</div>
     <div class="ticker-track">
       <div class="ticker-content" id="ticker-text">
-        Selamat datang di layanan antrian poli. Harap mempersiapkan kartu identitas dan kartu pasien Anda. Terima kasih
-        telah bersabar.
+        Selamat datang di layanan antrian poli. Harap mempersiapkan kartu identitas dan kartu pasien Anda.
       </div>
     </div>
   </footer>
 
-
-  <!-- Overlay Panggilan Besar (Ala Loket) -->
+  <!-- ═══ CALL OVERLAY ══════════════════════════════════════════════ -->
   <div id="call-overlay" class="hidden">
     <div class="call-box">
-      <div class="call-title">PANGGILAN ANTRIAN</div>
-      <div class="call-number" id="overlay-number">A-001</div>
-      <div class="call-name" id="overlay-name">NAMA PASIEN</div>
-      <div class="call-poli" id="overlay-poli">NAMA POLIKLINIK</div>
+      <div class="call-title">Panggilan Antrian</div>
+      <div class="call-divider"></div>
+      <div class="call-number" id="overlay-number">001</div>
+      <div class="call-name" id="overlay-name">Nama Pasien</div>
+      <div class="call-arrow">↓</div>
+      <div class="call-poli" id="overlay-poli">Poliklinik</div>
     </div>
   </div>
 
   <script src="/static/app.js"></script>
 </body>
-
 </html>

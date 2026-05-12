@@ -1,0 +1,6 @@
+target/
+.git/
+.env
+*.md
+generate_audio.py
+.DS_Store

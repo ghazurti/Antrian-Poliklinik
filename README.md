@@ -44,6 +44,31 @@ Akses di browser:
 -   **Display TV**: `http://localhost:3030/`
 -   **Kontrol Panggilan**: `http://localhost:3030/static/control.html`
 
+## 🐳 Cara Menjalankan dengan Docker
+
+Sistem ini mendukung Docker untuk memudahkan instalasi di VPS atau panel seperti **aaPanel**.
+
+### 1. Persiapan Docker
+Pastikan Docker dan Docker Compose sudah terinstal di server Anda.
+
+### 2. Konfigurasi
+Sesuaikan file `.env` (terutama `DATABASE_URL` jika menggunakan database sendiri). Jika menggunakan `docker-compose.yml` yang disediakan, aplikasi akan mencoba terhubung ke kontainer MySQL di dalamnya.
+
+### 3. Jalankan dengan Docker Compose
+```bash
+docker compose up -d
+```
+Aplikasi akan tersedia di port `3030`.
+
+## 🖥️ Instalasi di aaPanel Docker
+
+1.  Buka menu **Docker** di aaPanel.
+2.  Pilih tab **Project** dan klik **Add Project**.
+3.  Pilih **Project Path** ke folder `Antrian-Poliklinik`.
+4.  aaPanel akan mendeteksi `docker-compose.yml`.
+5.  Klik **Confirm** untuk memulai build dan menjalankan kontainer.
+6.  Gunakan **Reverse Proxy** di menu Website aaPanel jika Anda ingin mengaksesnya via domain (misal: `antrian.rsud.com` -> `http://127.0.0.1:3030`).
+
 ## 📂 Struktur Proyek
 
 -   `src/main.rs`: Logika utama backend, API, dan integrasi database.

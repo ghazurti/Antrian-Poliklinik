@@ -95,11 +95,9 @@ function renderJadwal(items) {
   }
   elSchedule.innerHTML = items.map(item => `
     <tr>
-      <td style="font-weight: 700; color: #fff;">${escHtml(item.nm_dokter)}</td>
-      <td style="font-size: 0.85rem;">${escHtml(item.nm_poli)}</td>
-      <td style="font-weight: 800; color: var(--accent); white-space: nowrap;">
-        ${item.jam_mulai.substring(0, 5)} - ${item.jam_selesai.substring(0, 5)}
-      </td>
+      <td><div class="doc-name">${escHtml(item.nm_dokter)}</div></td>
+      <td><div class="poli-name">${escHtml(item.nm_poli)}</div></td>
+      <td><span class="jam-badge">${item.jam_mulai.substring(0, 5)} – ${item.jam_selesai.substring(0, 5)}</span></td>
     </tr>
   `).join('');
 }
@@ -142,10 +140,13 @@ function initAutoScroll() {
 // ─── Render UI ───────────────────────────────────────────────────────────────
 
 function renderCalled(items) {
+  const countEl = document.getElementById('called-count');
   if (!items || items.length === 0) {
     elCalled.innerHTML = '<div class="empty-state">Belum ada antrian yang dipanggil</div>';
+    if (countEl) countEl.textContent = '0';
     return;
   }
+  if (countEl) countEl.textContent = items.length;
   elCalled.innerHTML = items.map(item => `
     <div class="called-card">
       <div class="called-number">${escHtml(item.no_antrian)}</div>
@@ -153,7 +154,10 @@ function renderCalled(items) {
         <div class="called-poli">${escHtml(item.nama_poli)}</div>
         <div class="called-name">${escHtml(item.nama_pasien)}</div>
       </div>
-      <div class="called-badge">Dipanggil</div>
+      <div class="called-badge">
+        <span class="called-badge-icon">🔔</span>
+        <span class="called-badge-text">Dipanggil</span>
+      </div>
     </div>
   `).join('');
 }
@@ -192,42 +196,83 @@ async function processCallQueue() {
   processCallQueue();
 }
 
-function speakPanggilanSync(item) {
+// ─── Audio clip player ───────────────────────────────────────────────────────
+
+function playClip(name) {
+  return new Promise((resolve) => {
+    const audio = new Audio(`/static/audio/${name}.mp3`);
+    audio.onended = resolve;
+    audio.onerror = resolve; // fallback: lanjut walau file tidak ada
+    audio.play().catch(resolve);
+  });
+}
+
+function pause(ms) {
+  return new Promise(r => setTimeout(r, ms));
+}
+
+// Pecah nomor antrian jadi digit, contoh "017" → ["0","1","7"]
+function digitList(noAntrian) {
+  return String(noAntrian).replace(/\D/g, '').split('');
+}
+
+function ttsSpeakSync(text, { rate = 0.88, pitch = 1.0 } = {}) {
   return new Promise((resolve) => {
     if (!window.speechSynthesis) return resolve();
-
-    // Format nama poli agar enak didengar
-    const poli = item.nama_poli
-      .replace(/Poliklinik\s*/gi, 'Poli ')
-      .replace(/dr\.\s*/gi, 'dokter ')
-      .replace(/Sp\.\w+/gi, '')
-      .split(' - ')[0].trim();
-
-    const teks = `Mohon perhatian... Nomor... ${item.no_antrian}... ${item.nama_pasien}... silakan menuju ${poli}`;
-    const utter = new SpeechSynthesisUtterance(teks);
-
-    // Cari suara yang lebih halus (biasanya Google atau Premium)
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
     const voices = window.speechSynthesis.getVoices();
-    const idVoice = voices.find(v => v.lang.startsWith('id')) || voices.find(v => v.lang.includes('ID'));
+    const idVoice = voices.find(v => v.lang.startsWith('id')) ||
+                    voices.find(v => v.lang.includes('ID'));
     if (idVoice) utter.voice = idVoice;
-
     utter.lang = 'id-ID';
-    utter.rate = 0.85; // Sedikit lebih lambat agar tenang
-    utter.pitch = 1.05; // Sedikit lebih tinggi agar ramah
+    utter.rate = rate;
+    utter.pitch = pitch;
     utter.volume = 1.0;
-
-    utter.onend = () => {
-      console.log('🔈 Suara selesai:', teks);
-      resolve();
-    };
-    utter.onerror = (e) => {
-      console.error('❌ TTS Error:', e);
-      resolve();
-    };
-
-    console.log('🗣️ Mengucapkan:', teks);
+    utter.onend = resolve;
+    utter.onerror = resolve;
     window.speechSynthesis.speak(utter);
   });
+}
+
+async function speakPanggilanSync(item) {
+  const nama = item.nama_pasien
+    .toLowerCase()
+    .replace(/\b\w/g, c => c.toUpperCase());
+
+  const poli = item.nama_poli
+    .replace(/Poliklinik\s*/gi, 'Poli ')
+    .replace(/dr\.\s*/gi, 'dokter ')
+    .replace(/Sp\.\w+/gi, '')
+    .split(' - ')[0].trim();
+
+  // 1. "Mohon perhatian"
+  await playClip('mohon_perhatian');
+  await pause(350);
+
+  // 2. "Nomor"
+  await playClip('nomor');
+  await pause(200);
+
+  // 3. Digit-digit nomor antrian
+  for (const d of digitList(item.no_antrian)) {
+    await playClip(d);
+    await pause(150);
+  }
+  await pause(300);
+
+  // 4. Nama pasien — TTS
+  await ttsSpeakSync(nama, { rate: 0.82 });
+  await pause(350);
+
+  // 5. "silakan menuju"
+  await playClip('silakan_menuju');
+  await pause(200);
+
+  // 6. Nama poli — TTS
+  await ttsSpeakSync(poli, { rate: 0.88 });
+
+  console.log('🔈 Panggilan selesai:', nama);
 }
 
 // ─── Ticker ───────────────────────────────────────────────────────────────────
